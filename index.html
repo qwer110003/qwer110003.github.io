@@ -1,18 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>카카오 API (지도)</title>
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- sylesheet -->
-    <script src="kakaoMpa.js"></script>
-</head>
-<body>
-    <div id="map" style="width:600px; height:600px;">
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf49e414e83e11174542340618560ddf"></script>
-    </div>
-</body>
+∏∏∏<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>자리어때</title>
+        <link href="./index.css" rel="stylesheet">
+    </head>
+    <body style="padding: 0; margin: 0;">
+        <header style="display: flex; background-color: #ffffff; position: fixed; width: 100%; top: 0;">
+            <nav class="nav-style">
+                <div class="nav-logo">
+                    <img src="./자리어때.svg" class="logo-img">
+                </div>
+                <div style="display: flex; justify-content: end; align-items: center; width: 100%;">
+                    <div class="top-bar">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="가게 검색">
+                            <button class="search-btn" onclick="toggleSearch()">
+                                <img src="./fi-rs-search.svg" class="search-icn">
+                            </button>
+                        </div>
+                        <button class="notification-btn" onclick="toggleNotificationPanel()">
+                            <img src="./fi-rs-bell.svg" class="notification-icn">
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div id="map" style="width:100%; height:400px;"></div>
+            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a89fb2020f34939fa8807bea5a86e7c"></script>
+            <script>
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = { 
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+// 마커가 표시될 위치입니다 
+var markerPosition  = new kakao.maps.LatLng(33.450701, 126.570667); 
+
+// 마커를 생성합니다
+var marker = new kakao.maps.Marker({
+    position: markerPosition
+});
+
+// 마커가 지도 위에 표시되도록 설정합니다
+marker.setMap(map);
+
+            </script>
+    </body>
 </html>
+<script>
+    // var container = document.getElementById('map');
+	// var options = {
+	// 	center: new kakao.maps.LatLng(33.450701, 126.570667),
+	// 	level: 3
+	// };
+
+	// var map = new kakao.maps.Map(container, options);
+
+
+    const stores = [
+        {name: "삼춘네", lat:36.8152, lng:127.1543, address: "충남 천안시 동남구 문암로 69", hours: "04:00~04:00", level: "혼잡", distance: 120, alert:false},
+        {name: "면식당", lat:36.8155, lng:127.1546, address: "충남 천안시 동남구 문암로 66", hours: "10:30~21:00", level: "보통", distance: 350, alert:false},
+        {name: "천원국수", lat:36.8153, lng:127.1545, address: "충남 천안시 동남구 문암로 66", hours: "09:00~20:00", level: "여유", distance: 200, alert:false},
+        {name: "야간작업", lat:36.8158, lng:127.1550, address: "충남 천안시 동남구 문암로 77", hours: "10:00~22:00", level: "혼잡", distance: 500, alert:false},
+        {name: "고기굽는집", lat:36.8160, lng:127.1553, address: "충남 천안시 동남구 문암로 79", hours: "10:30~21:30", level: "혼잡", distance: 250, alert:false}
+    ];
+    let sortState = { crowd: "desc", distance: "asc" };
+    
+    function initMap() {
+        const center = { lat: 36.8152, lng: 127.1543 };
+        const map = new google.maps.Map(document.getElementById("map"), { zoom: 16, center });
+    
+        stores.forEach(store=>{
+            new google.maps.Marker({
+                position: { lat: store.lat, lng: store.lng },
+                map,
+                title: store.name,
+                label: ""
+            });
+        });
+    
+        renderStoreList(stores);
+    }
+    
+    function isOpen(hours){
+        const now = new Date();
+        const [open, close] = hours.split("~").map(t=>t.trim());
+        const [oh, om] = open.split(":").map(Number);
+        const [ch, cm] = close.split(":").map(Number);
+        const openTime = oh*60+om;
+        const closeTime = ch*60+cm;
+        const nowTime = now.getHours()*60+now.getMinutes();
+        if(openTime < closeTime){
+            return nowTime>=openTime && nowTime<=closeTime;
+        } else {
+            return nowTime>=openTime || nowTime<=closeTime;
+        }
+    }
+    
+    function renderStoreList(list){
+        const container = document.getElementById("storeList");
+        container.innerHTML = "";
+        list.forEach((store)=> {
+            const status = isOpen(store.hours) ? "영업중" : "마감";
+            container.innerHTML += `<div class="store-card"> 
+                <div class="store-img"></div>
+                <div class="store-info">
+                    <div class="store-header">
+                        <span>${store.name}</span>
+                        <button class="${store.alert?'on':'off'}" onclick="toggleAlert(this, '${store.name}')">${store.alert?'🔔':'🔕'}</button>
+                    </div>
+                    <p>${store.address}</p>
+                    <p>영업시간: ${store.hours}</p>
+                    <p>혼잡도: <span class="crowd" style="color:${store.level==="혼잡"?"red":store.level==="보통"?"orange":"green"}">${store.level}</span> / 상태: ${status}</p>
+                </div>
+            </div>`;
+        });
+    }
+    
+    function toggleSheet(){ document.getElementById("bottomSheet").classList.toggle("open"); }
+    
+    function toggleSort(type){
+        if(type==="crowd"){
+            sortState.crowd = sortState.crowd==="desc"?"asc":"desc";
+            document.getElementById("crowdArrow").innerText = sortState.crowd==="desc"?"▼":"▲";
+            const order = {혼잡:3, 보통:2, 여유:1};
+            const sorted = [...stores].sort((a,b)=> sortState.crowd==="desc"? order[b.level]-order[a.level] : order[a.level]-order[b.level]);
+            renderStoreList(sorted);
+        } else {
+            sortState.distance = sortState.distance==="asc"?"desc":"asc";
+            document.getElementById("distanceArrow").innerText = sortState.distance==="asc"?"▼":"▲";
+            const sorted = [...stores].sort((a,b)=> sortState.distance==="asc"? a.distance-b.distance : b.distance-a.distance);
+            renderStoreList(sorted);
+        }
+    }
+    
+    function toggleSearch(){
+        const input = document.getElementById("searchInput");
+        input.style.display = (input.style.display === "none" || input.style.display === "") ? "inline-block" : "none";
+        if(input.style.display === "inline-block") input.focus();
+    }
+    
+    function toggleAlert(btn, storeName){
+        const store = stores.find(s => s.name === storeName);
+        if(store){
+            store.alert = !store.alert;
+            btn.textContent = store.alert ? '🔔' : '🔕';
+            btn.classList.toggle("on", store.alert);
+            btn.classList.toggle("off", !store.alert);
+        }
+    }
+    
+    function toggleNotificationPanel(){
+        const panel = document.getElementById("notificationPanel");
+        panel.style.display = (panel.style.display === "block") ? "none" : "block";
+    }
+</script>
