@@ -13,7 +13,7 @@ body{
 
 .nav-logo{
     width: 18vh;
-    margin-left: 40px;
+    margin-left: 80px;
     margin-top: 1vh;
 }
 
@@ -93,16 +93,16 @@ body{
 
 .drag-bar { 
     width: 30vw; 
-    height: 0.5vh; 
+    height: 1vh; 
     background: #ccc; 
     border-radius: 3px; 
-    margin: 20px auto 15px; 
+    margin: 40px auto 35px; 
     cursor: pointer; 
 }
 
 .filters { 
     display: flex; 
-    justify-content: space-between; 
+    justify-content: center; 
     align-items: center; 
     gap: 6vw;
     font-size: clamp(16px, 2vh, 80px);
