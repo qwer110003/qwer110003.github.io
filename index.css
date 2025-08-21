@@ -147,7 +147,7 @@ input {
 
 .store-list { 
     overflow-y: auto;
-    max-height: 600px; 
+    max-height: 80vh; 
     padding: 0 10px 10px; 
 }
 
@@ -161,8 +161,8 @@ input {
 }
 
 .store-img {
-    width: clamp(20px, 11vh, 150px); 
-    height: clamp(20px, 11vh, 150px); 
+    width: clamp(20px, 15vh, 180px); 
+    height: clamp(20px, 15vh, 180px); 
     border-radius: 8px; 
     background: #ddd; 
     margin-right: 10px; 
@@ -171,7 +171,7 @@ input {
 
 .store-info { 
     flex: 1; 
-    font-size: 16px;
+    font-size: clamp(16px, 1.4vh, 80px);
 }
 
 .store-header { 
@@ -179,7 +179,7 @@ input {
     justify-content: space-between; 
     align-items: center; 
     font-weight: 600; 
-    font-size: 20px; 
+    font-size: clamp(16px, 1.9vh, 80px); 
 }
 
 .store-header button { 
