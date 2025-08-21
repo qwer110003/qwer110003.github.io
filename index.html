@@ -26,7 +26,7 @@
                 </div>
             </nav>
         </header>
-        <div id="map" style="width:100%; height: 60vh; margin-top: 9.4vh;"></div>
+        <div id="map" style="width:100%; height: 60vh; margin-top: 9.3vh;"></div>
             <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf49e414e83e11174542340618560ddf"></script>
             <script>
                 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
@@ -52,12 +52,12 @@
             <div class="drag-bar" onclick="toggleSheet()"></div>
             <div class="filters">
                 <div class="filter-btn-select" onclick="toggleSort('crowd')">
-                    <img src="./혼잡도.svg">
+                    <img src="./혼잡도.svg" style=" width: 6.5vw;">
                     <p class="btn-txt">혼잡도</p>
                     <span id="crowdArrow">▼</span>
                 </div>
                 <div class="filter-btn-unselect" onclick="toggleSort('distance')">
-                    <img src="./거리순.svg">
+                    <img src="./거리순.svg" style=" width: 6.5vw;">
                     <p class="btn-txt">거리순</p>
                     <span id="distanceArrow">▼</span>
                 </div>
