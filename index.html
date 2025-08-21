@@ -9,7 +9,9 @@
         <header style="display: flex; background-color: #ffffff; position: fixed; width: 100%; top: 0;">
             <nav class="nav-style">
                 <div class="nav-logo">
-                    <img src="./자리어때.svg" class="logo-img">
+                    <a href="index.html">
+                        <img src="./자리어때.svg" class="logo-img" style="cursor:pointer;">
+                    </a>
                 </div>
                 <div style="display: flex; justify-content: end; align-items: center; width: 100%;">
                     <div class="top-bar">
@@ -26,7 +28,7 @@
                 </div>
             </nav>
         </header>
-        <div id="map" style="width:100%; height: 90vh; margin-top: 9.3vh;"></div>
+        <div id="map" style="width:100%; height: 70vh; margin-top: 9.3vh; position: fixed;"></div>
             <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf49e414e83e11174542340618560ddf"></script>
             <script>
                 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 

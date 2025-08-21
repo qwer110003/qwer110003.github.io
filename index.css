@@ -12,7 +12,7 @@ body{
 }
 
 .nav-logo{
-    width: 18vh;
+    width: 19vh;
     margin-left: 80px;
     margin-top: 1vh;
 }
@@ -115,12 +115,13 @@ body{
     display: flex; 
     align-items: center; 
     justify-content: center;
-    border: 2px solid #FFB86A;
+    border: 3px solid #FFB86A;
     border-radius: 3vw; 
     cursor: pointer; 
     background: transparent; 
     transition: 0.3s;
     color: #F54927;
+    font-weight: 600;
 }
 
 .filter-btn.active {
