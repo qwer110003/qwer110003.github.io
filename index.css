@@ -8,12 +8,11 @@ body{
     height: 10vh;
     display: flex;
     align-items: center;
-    background-color: antiquewhite;
 }
 
 .nav-logo{
     width: 19vh;
-    margin-left: 80px;
+    margin-left: 70px;
     margin-top: 1vh;
 }
 
@@ -51,6 +50,7 @@ body{
     border: none; 
     outline: none; 
     display: none; 
+    transition: width 0.3s ease;
 }
 
 .search-btn, .notification-btn { 
@@ -97,7 +97,7 @@ body{
     height: 0.7vh; 
     background: #000000; 
     border-radius: 30px; 
-    margin: 20px auto 10px; 
+    margin: 30px auto 22px; 
     cursor: grab; 
 }
 
@@ -141,13 +141,62 @@ body{
     padding-top: 3px;
 }
 
-.store-list { overflow-y: auto; max-height: 300px; padding: 0 10px 10px; }
-.store-card { display: flex; background: #fff; margin-bottom: 10px; padding: 10px; border-radius: 10px; box-shadow: 0 1px 5px rgba(0,0,0,0.1); }
-.store-img { width: 70px; height: 70px; border-radius: 8px; background: #ddd; margin-right: 10px; flex-shrink: 0; }
-.store-info { flex: 1; font-size: 13px; }
-.store-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; }
-.store-header button { border: none; background: none; cursor: pointer; font-size: 20px; }
-.store-header button.on { color: gold; }
-.store-header button.off { color: gray; }
-.store-info p { margin: 2px 0; }
-.crowd { font-weight: bold; }
+.store-list { 
+    overflow-y: auto; 
+    max-height: 300px; 
+    padding: 0 10px 10px; 
+}
+
+.store-card { 
+    display: flex; 
+    background: #fff; 
+    margin-bottom: 10px; 
+    padding: 10px; 
+    border-radius: 10px; 
+}
+
+.store-img {
+    width: 70px; 
+    height: 70px; 
+    border-radius: 8px; 
+    background: #ddd; 
+    margin-right: 10px; 
+    flex-shrink: 0; 
+}
+
+.store-info { 
+    flex: 1; 
+    font-size: 13px; 
+}
+
+.store-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-weight: bold; 
+    font-size: 14px; 
+}
+
+.store-header button { 
+    border: none; 
+    background: none; 
+    cursor: pointer; 
+    font-size: 20px; 
+}
+
+.store-header button.on { 
+    color: gold; 
+}
+
+.store-header button.off { 
+    color: gray; 
+}
+
+.store-info p { 
+    margin: 2px 0; 
+}
+
+.crowd { 
+    font-weight: bold; 
+}
+
