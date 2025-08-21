@@ -93,10 +93,10 @@ body{
 
 .drag-bar { 
     width: 30vw; 
-    height: 1vh; 
+    height: 0.7vh; 
     background: #ccc; 
-    border-radius: 3px; 
-    margin: 40px auto 35px; 
+    border-radius: 30px; 
+    margin: 30px auto 25px; 
     cursor: pointer; 
 }
 
@@ -109,7 +109,7 @@ body{
 }
 .filter-btn-select { 
     width: 40vw;
-    height: 5.3vh;
+    height: 6vh;
     display: flex; 
     align-items: center; 
     justify-content: center;
@@ -121,13 +121,14 @@ body{
 
 .filter-btn-unselect { 
     width: 40vw;
-    height: 5.3vh;
+    height: 6vh;
     display: flex; 
     align-items: center; 
     justify-content: center;
+    border: 1px solid #FFB86A;
     border-radius: 3vw; 
     cursor: pointer; 
-    background: #FFB86A; 
+    background: transparent; 
 }
 
 .filter-btn span { 
@@ -136,8 +137,8 @@ body{
 }
 
 .btn-txt{
-    padding-left: 3px;
-    padding-right: 3px;
+    padding-left: 4.5vw;
+    padding-right: 4.5vw;
     padding-top: 3px;
 }
 
