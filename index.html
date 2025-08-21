@@ -26,7 +26,7 @@
                 </div>
             </nav>
         </header>
-        <div id="map" style="width:100%; height: 60vh; margin-top: 9.3vh;"></div>
+        <div id="map" style="width:100%; height: 90vh; margin-top: 9.3vh;"></div>
             <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf49e414e83e11174542340618560ddf"></script>
             <script>
                 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
@@ -49,17 +49,27 @@
                 marker.setMap(map);
             </script>
         <div class="bottom-sheet" id="bottomSheet">
-            <div class="drag-bar" onclick="toggleSheet()"></div>
+            <div class="drag-bar" id="dragBar"></div>
             <div class="filters">
-                <div class="filter-btn-select" onclick="toggleSort('crowd')">
-                    <img src="./혼잡도.svg" style=" width: 6.5vw;">
+                <div class="filter-btn" onclick="toggleSort('crowd')">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width: 6.5vw;">
+                        <circle cx="12" cy="9" r="4"/>
+                        <circle cx="17" cy="9" r="3"/>
+                        <circle cx="7" cy="9" r="3"/>
+                        <path d="M17 13C19.4478 13.0001 20.4286 15.4456 20.7969 16.916C20.9406 17.4899 20.4862 18 19.8945 18H17.5684C17.1653 16.4903 16.3855 14.778 14.8779 13.7998C15.4201 13.321 16.1137 13 17 13Z"/>
+                        <path d="M7 13C7.88599 13 8.57903 13.3212 9.12109 13.7998C7.61395 14.7781 6.83465 16.4905 6.43164 18H4.10449C3.51309 17.9997 3.05944 17.4898 3.20312 16.916C3.57139 15.4456 4.55216 13 7 13Z"/>
+                        <path d="M12 14C15.7087 14 16.6665 17.301 16.9139 19.0061C16.9932 19.5526 16.5523 20 16 20H8C7.44772 20 7.00684 19.5526 7.08614 19.0061C7.33351 17.301 8.29134 14 12 14Z"/>
+                    </svg>                        
                     <p class="btn-txt">혼잡도</p>
-                    <span id="crowdArrow">▼</span>
+                    <img src="./arrow.svg" style="width: 6.5vw;" id="crowdArrow">
                 </div>
-                <div class="filter-btn-unselect" onclick="toggleSort('distance')">
-                    <img src="./거리순.svg" style=" width: 6.5vw;">
+                <div class="filter-btn" onclick="toggleSort('distance')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C15.866 2 19 5.13401 19 9C19 14.0159 13.8819 17.0342 12.3984 17.8037C12.1456 17.9349 11.8544 17.9349 11.6016 17.8037C10.1181 17.0342 5 14.0159 5 9C5 5.13401 8.13401 2 12 2ZM12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6Z" fill="currentColor"/>
+                        <path d="M18.0622 16.5C18.6766 16.9561 19 17.4734 19 18C19 18.5266 18.6766 19.0439 18.0622 19.5C17.4478 19.9561 16.5641 20.3348 15.5 20.5981C14.4359 20.8614 13.2288 21 12 21C10.7712 21 9.56414 20.8614 8.5 20.5981C7.43587 20.3348 6.5522 19.9561 5.93782 19.5C5.32344 19.0439 5 18.5266 5 18C5 17.4734 5.32344 16.9561 5.93782 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>                                                
                     <p class="btn-txt">거리순</p>
-                    <span id="distanceArrow">▼</span>
+                    <img src="./arrow.svg" style="width: 6.5vw;" id="distanceArrow">
                 </div>
             </div>
             <div class="store-list" id="storeList"></div>
@@ -128,18 +138,89 @@
         });
     }
     
-    function toggleSheet(){ document.getElementById("bottomSheet").classList.toggle("open"); }
-    
+    const sheet = document.getElementById("bottomSheet");
+    const dragBar = document.getElementById("dragBar");
+
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
+    let moved = false; // 드래그 여부 확인용
+    let maxY = window.innerHeight * 0.6;
+
+    function toggleSheet() {
+        sheet.classList.toggle("open");
+    }
+
+    function dragStart(e) {
+        startY = e.touches ? e.touches[0].clientY : e.clientY;
+        isDragging = true;
+        moved = false;
+        sheet.style.transition = "none"; // 드래그 중에는 transition 제거
+    }
+
+    function dragMove(e) {
+    if (!isDragging) return;
+        e.preventDefault(); // 스크롤 방지
+
+    let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        currentY = clientY - startY;
+
+    if (Math.abs(currentY) > 5) moved = true; // 5px 이상 움직이면 드래그로 간주
+
+    let baseY = sheet.classList.contains("open") ? 0 : maxY;
+    let moveY = baseY + currentY;
+
+    if (moveY < 0) moveY = 0;
+    if (moveY > window.innerHeight * 0.6) moveY = maxY;
+
+    sheet.style.transform = `translateY(${moveY}px)`;
+    }
+
+    function dragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        sheet.style.transition = "transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)";
+
+        if (!moved) {
+            // 움직임이 거의 없었다면 → 클릭으로 처리
+            toggleSheet();
+            return;
+        }
+
+        // 드래그였다면 스냅 동작
+        if (currentY > maxY * 0.3) {
+            sheet.classList.remove("open");
+            sheet.style.transform = `translateY(${maxY}px)`;
+        } else {
+            sheet.classList.add("open");
+            sheet.style.transform = `translateY(0)`;
+        }
+        currentY = 0;
+    }
+
+    // 이벤트 등록
+    dragBar.addEventListener("mousedown", dragStart);
+    document.addEventListener("mousemove", dragMove);
+    document.addEventListener("mouseup", dragEnd);
+
+    dragBar.addEventListener("touchstart", dragStart);
+    document.addEventListener("touchmove", dragMove, { passive: false });
+    document.addEventListener("touchend", dragEnd);
+
+    window.addEventListener('resize', () => {
+        maxY = window.innerHeight * 0.6;
+    });
+
     function toggleSort(type){
         if(type==="crowd"){
             sortState.crowd = sortState.crowd==="desc"?"asc":"desc";
-            document.getElementById("crowdArrow").innerText = sortState.crowd==="desc"?"▼":"▲";
+            document.getElementById("crowdArrow").src = sortState.crowd==="desc" ? "./arrow.svg":"./arrow-up.svg";
             const order = {혼잡:3, 보통:2, 여유:1};
             const sorted = [...stores].sort((a,b)=> sortState.crowd==="desc"? order[b.level]-order[a.level] : order[a.level]-order[b.level]);
             renderStoreList(sorted);
         } else {
             sortState.distance = sortState.distance==="asc"?"desc":"asc";
-            document.getElementById("distanceArrow").innerText = sortState.distance==="asc"?"▼":"▲";
+            document.getElementById("distanceArrow").src = sortState.distance==="asc" ? "./arrow.svg":"./arrow-up.svg";
             const sorted = [...stores].sort((a,b)=> sortState.distance==="asc"? a.distance-b.distance : b.distance-a.distance);
             renderStoreList(sorted);
         }
@@ -165,4 +246,26 @@
         const panel = document.getElementById("notificationPanel");
         panel.style.display = (panel.style.display === "block") ? "none" : "block";
     }
+
+    const buttons = document.querySelectorAll(".filter-btn");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            // 모든 버튼 active 해제
+            buttons.forEach(b => b.classList.remove("active"));
+
+            // 클릭한 버튼에 active 추가
+            btn.classList.add("active");
+
+            // 화살표 토글 (오름/내림)
+            const arrow = btn.querySelector(".arrow");
+            if (arrow.classList.contains("up")) {
+            arrow.classList.remove("up");
+            arrow.classList.add("down");
+            } else {
+            arrow.classList.remove("down");
+            arrow.classList.add("up");
+            }
+        });
+    });
 </script>
