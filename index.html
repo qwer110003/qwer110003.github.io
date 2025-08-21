@@ -130,31 +130,49 @@
 
             let crowdText = " ";
             let crowdColor = " ";
+            let levelMsg = " ";
             if (store.level === "여유"){
                 crowdText = store.level;
                 crowdColor = "green";
+                levelMsg = "빈 자리 다수";
             } else if (store.level === "보통") {
                 crowdText = store.level;
                 crowdColor = "orange";
+                levelMsg = "빈 자리 약간";
             } else {
                 crowdText = store.level;
                 crowdColor = "red";
+                levelMsg = "빈 자리 없음";
             }
 
             container.innerHTML += `
                 <div class="store-card">
                     <div class="store-img"></div>
                     <div class="store-info">
-                    <div class="store-header">
-                        <span class="store-name">${store.name}</span>
-                        <button class="${store.alert ? "on" : "off"}"
-                                onclick="toggleAlert(this, '${store.name}')">
-                        <img src="${store.alert ? "./alert-icn-on.svg" : "./alert-icn.svg"}" style="width: clamp(20px, 6.5vw, 80px);">
-                        </button>
-                    </div>
-                    <p><span style="color:${statusColor}; font-weight:400">${statusText}</span> ${store.hours}</p>
-                    <p><span style="color:${crowdColor}; font-weight:400">${crowdText}</span> ${store.levelMsg}</p>
-                    <p>${store.address}</p>
+                        <div class="store-header">
+                            <span class="store-name">${store.name}</span>
+                            <button class="${store.alert ? "on" : "off"}"
+                                    onclick="toggleAlert(this, '${store.name}')">
+                            <img src="${store.alert ? "./alert-icn-on.svg" : "./alert-icn.svg"}" style="width: clamp(20px, 6.5vw, 80px);">
+                            </button>
+                        </div>
+                        <p class="store-meta-time">
+                            <span class="status-text" style="color:${statusColor}; font-weight:400">
+                                ${statusText}
+                            </span>
+                            <span class="hours-text">
+                                ${store.hours}
+                            </span>
+                        </p>
+                        <p class="store-meta-seat">
+                            <span class="crowd-text" style="color:${crowdColor}; font-weight:400;">
+                                ${crowdText}
+                            </span>
+                            <span class="level-text">
+                                ${levelMsg}
+                            </span>
+                        </p>
+                        <p>${store.address}</p>
                     </div>
                 </div>
                 `;

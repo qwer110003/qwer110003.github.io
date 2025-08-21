@@ -161,34 +161,79 @@ input {
 }
 
 .store-img {
-    width: clamp(20px, 15vh, 180px); 
-    height: clamp(20px, 15vh, 180px); 
-    border-radius: 8px; 
+    width: clamp(20px, 20vh, 300px); 
+    height: clamp(20px, 20vh, 300px); 
+    border-radius: 30px; 
     background: #ddd; 
-    margin-right: 10px; 
-    margin-left: 80px;
+    margin-right: 35px; 
+    margin-left: clamp(5px, 3.9vw, 70px);
     flex-shrink: 0; 
+}
+
+@media(min-width: 828px){
+    .store-img{
+        margin-left: clamp(50px, 5vw, 70px);
+    }
 }
 
 .store-info { 
     flex: 1; 
-    font-size: clamp(16px, 1.4vh, 80px);
+    font-size: clamp(16px, 1.6vh, 80px);
+    color: #7C7C7C;
+    margin-top: 8px;
 }
 
 .store-header { 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
+    margin-top: 5px;
     font-weight: 600; 
     font-size: clamp(16px, 1.9vh, 80px); 
+    color: #000000;
 }
+
+.store-meta-time {
+    display: flex;
+    position: relative;
+    align-items: center; /* 같은 높이 맞추기 */
+    gap: 30px;            /* 텍스트와 값 사이 간격 */
+    margin: 0;           /* p 기본 마진 제거 */
+    font-size: clamp(16px, 1.6vh, 80px);     /* 동일한 폰트 크기 */
+    line-height: 1.6;    /* 줄 간격 통일 */
+}
+
+.hours-text {
+    position: absolute;
+    left: clamp(16px, 16vw, 600px); /* 반응형 x축 고정 */
+    top: 0; /* p 태그 기준 y축 위치 */
+    font-weight: 400;
+  }
+
+.store-meta-seat {
+    display: flex;
+    position: relative;
+    align-items: center; /* 같은 높이 맞추기 */
+    gap: 30px;            /* 텍스트와 값 사이 간격 */
+    margin: 0;           /* p 기본 마진 제거 */
+    font-size: clamp(16px, 1.6vh, 80px);     /* 동일한 폰트 크기 */
+    line-height: 1.7;    /* 줄 간격 통일 */
+}
+
+.level-text {
+    position: absolute;
+    left: clamp(16px, 16vw, 600px); /* 반응형 x축 고정 */
+    top: 0; /* 부모 기준 y축 위치 */
+    font-weight: 400;
+  }
+
 
 .store-header button { 
     border: none; 
     background: none; 
     cursor: pointer; 
     font-size: 20px; 
-    margin-right: 80px;
+    margin-right: 60px;
 }
 
 .store-header button.on { 
