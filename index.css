@@ -17,7 +17,7 @@ input {
 .nav-logo{
     width: 19vh;
     margin-left: 70px;
-    margin-top: 1vh;
+    margin-top: 0.4vh;
 }
 
 .logo-img{
@@ -38,6 +38,7 @@ input {
     z-index: 15; 
     gap: 2vh; 
     margin-right: 3vh;
+    margin-bottom: 0.6vh;
 }
 
 .search-box { 
