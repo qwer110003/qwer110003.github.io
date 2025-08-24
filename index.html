@@ -98,7 +98,7 @@
     function initMap() {
         const mapContainer = document.getElementById('map'); 
         const mapOption = { 
-            center: new kakao.maps.LatLng(37.497946, 127.027619), // 지도 중심
+            center: new kakao.maps.LatLng(36.841236, 127.181333), // 지도 중심
             level: 3 // 확대 레벨
         };
 
@@ -114,11 +114,11 @@
             // 혼잡도별 마커 이미지 선택
             let markerImg = '';
             if (store.level === "여유") {
-                markerImg = './여유 위치표시.svg';
+                markerImg = 'spare.svg';
             } else if (store.level === "보통") {
-                markerImg = './보통 위치표시.svg';
+                markerImg = 'norrmal.svg';
             } else {
-                markerImg = './혼잡 위치표시.svg';
+                markerImg = 'crowd.svg';
             }
 
             // 마커 이미지 객체
@@ -294,7 +294,7 @@
                 // 이미 알림이 있으면 내용 갱신
                 existing.querySelector(".store-text").innerHTML = `
                     <strong>${store.name}</strong><br>
-                    현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}
+                    <span>현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}</span>
                 `;
             } else {
                 // 없으면 새로 추가
@@ -307,7 +307,7 @@
                     </div>
                     <div class="store-text">
                         <strong>${store.name}</strong><br>
-                        현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}
+                        <span>현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}<span>
                     </div>
                 `;
                 notificationPanel.prepend(div);
@@ -364,72 +364,6 @@ function toggleAlert(btn, storeName){
         }
     }
 }
-
-    // 매장 리스트 렌더링 함수
-    // function renderStoreList(list) {
-    //     const container = document.getElementById("storeList");
-    //     container.innerHTML = "";
-
-    //     list.forEach((store) => {
-    //         const isOpenNow = isOpen(store.hours);
-    //         const statusText = isOpenNow ? "영업 중" : "영업 종료";
-    //         const statusColor = isOpenNow ? "green" : "red";
-
-    //         let crowdText = "";
-    //         let crowdColor = "";
-    //         let levelMsg = "";
-
-    //         if (store.level === "여유") {
-    //             crowdText = store.level;
-    //             crowdColor = "green";
-    //             levelMsg = "빈 자리 다수";
-    //         } else if (store.level === "보통") {
-    //             crowdText = store.level;
-    //             crowdColor = "orange";
-    //             levelMsg = "빈 자리 약간";
-    //         } else {
-    //             crowdText = store.level || "정보 없음";
-    //             crowdColor = "red";
-    //             levelMsg = "빈 자리 없음";
-    //         }
-
-    //         // 영업시간 텍스트
-    //         let hoursText = "";
-    //         if (store.storeHours && store.storeHours.length > 0) {
-    //             store.storeHours.forEach(hour => {
-    //                 const openClose = hour.isOpen ? `${hour.openTime} ~ ${hour.closeTime}` : "휴무";
-    //                 hoursText += `${hour.dayOfWeek}: ${openClose}<br>`;
-    //             });
-    //         }
-
-    //         // 매장 카드 HTML
-    //         container.innerHTML += `
-    //             <div class="store-card">
-    //                 <div class="store-img" style="background-image:url('${store.imageUrl || './default.png'}'); background-size:cover; background-position:center;"></div>
-    //                 <div class="store-info">
-    //                     <div class="store-header">
-    //                         <span class="store-name">${store.name}</span>
-    //                         <button class="${store.alert ? "on" : "off"}"
-    //                             onclick="toggleAlert(this, '${store.name}')">
-    //                             <img src="${store.alert ? "./alert-icn-on.svg" : "./alert-icn.svg"}" style="width: clamp(20px, 6.5vw, 80px);">
-    //                         </button>
-    //                     </div>
-    //                     <p class="store-meta-time" style="color:${statusColor}; font-weight:400;">
-    //                         ${statusText} <br> ${hoursText}
-    //                     </p>
-    //                     <p class="store-meta-seat">
-    //                         <span class="crowd-text" style="color:${crowdColor}; font-weight:400;">
-    //                             ${crowdText}
-    //                         </span>
-    //                         <span style="margin-left:10px;">${levelMsg}</span>
-    //                     </p>
-    //                     <p>${store.address}</p>
-    //                 </div>
-    //             </div>
-    //         `;
-    //     });
-    // }
-
 
     // 바텀시트
     const sheet = document.getElementById("bottomSheet");

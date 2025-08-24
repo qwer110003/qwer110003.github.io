@@ -109,6 +109,7 @@ input {
     align-items: center; 
     gap: 6vw;
     font-size: clamp(16px, 1.9vh, 80px);
+    margin-bottom: 15px;
 }
 
 .filter-btn { 
@@ -318,7 +319,7 @@ input {
     position: fixed;
     top: 210px;
     right: 20px;
-    width: 45vw;
+    max-width: 60vw;
     background: #fff;
     border-radius: 40px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -337,12 +338,16 @@ input {
 }
 
 .store-icon {
-    width: clamp(40px, 5.5vh, 120px);
-    height: clamp(40px, 5.5vh, 120px);
+    width: clamp(40px, 4.8vh, 120px);
+    height: clamp(40px, 4.8vh, 120px);
     border-radius: 50%;
     background: #ccc; /* 매장 아이콘 자리 */
 }
 
-.store-text {
-    font-size: clamp(16px, 1.6vh, 80px);
+.store-text strong{
+    font-size: clamp(16px, 1.5vh, 80px);
+}
+
+.store-text span{
+    font-size: clamp(16px, 1.3vh, 80px);
 }
