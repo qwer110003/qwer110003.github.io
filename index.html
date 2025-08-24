@@ -85,7 +85,7 @@
 
     // 하드코딩 매장 데이터
     const stores = [
-        { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유" },
+        { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", },
         { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통" },
         { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡" }
     ];
@@ -95,7 +95,7 @@
         const mapContainer = document.getElementById('map'); 
         const mapOption = { 
             center: new kakao.maps.LatLng(37.497946, 127.027619), // 지도 중심
-            level: 2 // 확대 레벨
+            level: 3 // 확대 레벨
         };
 
         map = new kakao.maps.Map(mapContainer, mapOption); 
@@ -108,17 +108,17 @@
     function loadStores() {
         stores.forEach(store => {
             // 혼잡도별 마커 이미지 선택
-            let markerImg = "";
+            let markerImg = '';
             if (store.level === "여유") {
-                markerImg = "./여유 위치표시.svg";
+                markerImg = './여유 위치표시.svg';
             } else if (store.level === "보통") {
-                markerImg = "./보통 위치표시.svg";
+                markerImg = './보통 위치표시.svg';
             } else {
-                markerImg = "./혼잡 위치표시.svg";
+                markerImg = './혼잡 위치표시.svg';
             }
 
             // 마커 이미지 객체
-            const imageSize = new kakao.maps.Size(100, 106);
+            const imageSize = new kakao.maps.Size(80, 85);
             const markerImage = new kakao.maps.MarkerImage(markerImg, imageSize);
 
             // 좌표
@@ -137,7 +137,7 @@
                             <strong>${store.name}</strong><br>
                             ${store.address}<br>
                             혼잡도: ${store.level}
-                        </div>`
+                         </div>`
             });
 
             // 마커 클릭 이벤트
@@ -152,16 +152,76 @@
 
     // 매장 리스트 UI
     function renderStoreList(stores) {
-        const listEl = document.getElementById("storeList");
-        if (!listEl) return;
+        const container = document.getElementById("storeList");
+        if (!container) return;
+        container.innerHTML = "";
 
-        listEl.innerHTML = stores.map(store => `
-            <li>
-                <strong>${store.name}</strong><br>
-                ${store.address}<br>
-                혼잡도: ${store.level}
-            </li>
-        `).join("");
+        stores.forEach(store => {
+            // 영업 상태 판단
+            const isOpenNow = store.storeHours ? store.storeHours.some(hour => hour.isOpen) : false;
+            const statusText = isOpenNow ? "영업 중" : "영업 종료";
+            const statusColor = isOpenNow ? "green" : "red";
+
+            // 혼잡도 상태
+            let crowdText = "";
+            let crowdColor = "";
+            let levelMsg = "";
+
+            switch(store.level) {
+                case "여유":
+                    crowdText = store.level;
+                    crowdColor = "green";
+                    levelMsg = "빈 자리 다수";
+                    break;
+                case "보통":
+                    crowdText = store.level;
+                    crowdColor = "orange";
+                    levelMsg = "빈 자리 약간";
+                    break;
+                default:
+                    crowdText = store.level || "정보 없음";
+                    crowdColor = "red";
+                    levelMsg = "빈 자리 없음";
+            }
+
+            // 영업시간 텍스트 생성
+            let hoursText = "";
+            if (store.storeHours && store.storeHours.length > 0) {
+                hoursText = store.storeHours.map(hour => {
+                    const openClose = hour.isOpen ? `${hour.openTime} ~ ${hour.closeTime}` : "휴무";
+                    return `${hour.dayOfWeek}: ${openClose}`;
+                }).join('<div class="border-line"></div>');
+            }
+
+            // 매장 카드 HTML 생성
+            const cardHtml = `
+                <div class="store-card">
+                    <div class="store-img-box" style="background-size:cover; background-position:center;">
+                        <img src="${store.imageUrl || './default.png'}" class="store-img">
+                    </div>
+                    <div class="store-info">
+                        <div class="store-header">
+                            <span class="store-name">${store.name}</span>
+                            <button class="${store.alert ? "on" : "off"}" onclick="toggleAlert(this, '${store.name}')">
+                                <img src="${store.alert ? "./alert-icn-on.svg" : "./alert-icn.svg"}" style="width: clamp(20px, 6.5vw, 80px);">
+                            </button>
+                        </div>
+                        <p class="store-meta-time" style="color:${statusColor}; font-weight:400;">
+                            <span>${statusText}</span>
+                            <span class="hours-text">${hoursText}</span>
+                        </p>
+                        <p class="store-meta-seat">
+                            <span class="crowd-text" style="color:${crowdColor}; font-weight:400;">${crowdText}</span>
+                            <span class="level-text">${levelMsg}</span>
+                        </p>
+                        <p class="store-addr">${store.address}</p>
+                    </div>
+                </div>
+                <div class="border-line"></div>
+            `;
+
+            container.innerHTML += cardHtml;
+        });
     }
 
     // 지도 로드
