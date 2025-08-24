@@ -12,7 +12,9 @@
     <!-- 헤더 -->
     <header class="nav-style">
         <div class="nav-logo">
-            <img src="./자리어때.svg" class="logo-img">
+            <a href="./index.html">
+                <img src="./자리어때.svg" class="logo-img">
+            </a>
         </div>
         <div class="top-bar">
             <div class="search-box">
@@ -24,6 +26,8 @@
             <button class="notification-btn" onclick="toggleNotificationPanel()">
                 <img src="./fi-rs-bell.svg" class="notification-icn">
             </button>
+        </div>
+        <div class="notification-panel" id="notificationPanel">
         </div>
     </header>
 
@@ -77,8 +81,6 @@
         </div> -->
 
         <div class="store-list" id="storeList">
-    </div>
-    <div class="notification-panel" id="notificationPanel">
     </div>
 
     <script>
@@ -279,27 +281,71 @@
 
     const notificationPanel = document.getElementById("notificationPanel");
 
-// 알림 체크용 인터벌
-setInterval(() => {
+    setInterval(() => {
+    let updated = false; // 알림이 추가되거나 갱신되었는지 확인
+    
     stores.forEach(store => {
-        if(store.alert && (store.level === "보통" || store.level === "여유")) {
-            // 알림창에 새 알림 추가
-            const div = document.createElement("div");
-            div.className = "notification-item";
-            div.innerHTML = `
-                <div class="store-icon"></div>
-                <div class="store-text">
+        let existing = document.querySelector(
+            `#notificationPanel .notification-item[data-store="${store.name}"]`
+        );
+
+        if (store.alert && (store.level === "보통" || store.level === "여유")) {
+            if (existing) {
+                // 이미 알림이 있으면 내용 갱신
+                existing.querySelector(".store-text").innerHTML = `
                     <strong>${store.name}</strong><br>
                     현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}
-                </div>
-            `;
-            notificationPanel.prepend(div); // 최신 알림 위쪽
-
-            // 알림 완료 후 다시 알림 off
-            store.alert = false;
+                `;
+            } else {
+                // 없으면 새로 추가
+                const div = document.createElement("div");
+                div.className = "notification-item";
+                div.setAttribute("data-store", store.name);
+                div.innerHTML = `
+                    <div class="store-icon">
+                        <img src="${store.imageUrl}" style="width: 100%">    
+                    </div>
+                    <div class="store-text">
+                        <strong>${store.name}</strong><br>
+                        현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}
+                    </div>
+                `;
+                notificationPanel.prepend(div);
+            }
+            updated = true; // 새 알림 or 갱신 발생
+        } else {
+            // 알림이 꺼져 있거나 혼잡 상태면 패널에서 제거
+            if (existing) {
+                existing.remove();
+                updated = true; // 내용이 변했으므로 패널 열림
+            }
         }
     });
-}, 5000); // 5초마다 상태 확인
+
+    // 갱신이나 추가/삭제가 있으면 패널 자동으로 열기
+    if (updated) {
+        notificationPanel.style.display = "block";
+    }
+}, 5000);
+
+// 알림창 토글
+function toggleNotificationPanel() {
+    const panel = document.getElementById("notificationPanel");
+    if (!panel) return;
+
+    if (panel.style.display === "block") {
+        panel.style.display = "none";
+    } else {
+        panel.style.display = "block";
+    }
+}
+
+// 초기 상태 숨김
+document.addEventListener("DOMContentLoaded", () => {
+    const panel = document.getElementById("notificationPanel");
+    if(panel) panel.style.display = "none";
+});
+
 
 // 알림 버튼 클릭 시
 function toggleAlert(btn, storeName){
