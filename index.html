@@ -231,25 +231,50 @@
     // 지도 로드
     kakao.maps.load(initMap);
 
-    function getCurrentPosition(callback) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const userLat = position.coords.latitude;
-                    const userLng = position.coords.longitude;
-                    callback(userLat, userLng);
-                },
-                (error) => {
-                    console.error("위치 정보를 가져올 수 없습니다.", error);
-                    alert("위치 정보 사용이 거부되었습니다. 기본 위치로 설정합니다.");
-                    callback(36.841236, 127.181333); // 기본 위치
-                }
-            );
-        } else {
-            alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-            callback(36.841236, 127.181333); // 기본 위치
-        }
+    // function getCurrentPosition(callback) {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(
+    //             (position) => {
+    //                 const userLat = position.coords.latitude;
+    //                 const userLng = position.coords.longitude;
+    //                 callback(userLat, userLng);
+    //             },
+    //             (error) => {
+    //                 console.error("위치 정보를 가져올 수 없습니다.", error);
+    //                 alert("위치 정보 사용이 거부되었습니다. 기본 위치로 설정합니다.");
+    //                 callback(36.841236, 127.181333); // 기본 위치
+    //             }
+    //         );
+    //     } else {
+    //         alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+    //         callback(36.841236, 127.181333); // 기본 위치
+    //     }
+    // }
+
+    const DEFAULT_LAT = 36.841236;
+const DEFAULT_LNG = 127.181333;
+
+function getCurrentPosition(callback) {
+    if (!navigator.geolocation) {
+        alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+        if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
+        return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            if (typeof callback === "function") callback(userLat, userLng);
+        },
+        (error) => {
+            console.error("위치 정보를 가져올 수 없습니다.", error);
+            alert("위치 정보 사용이 거부되었거나 오류가 발생했습니다. 기본 위치로 설정합니다.");
+            if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+}
 
     function getDistance(lat1, lng1, lat2, lng2) {
         const R = 6371e3; // 지구 반지름 (m)

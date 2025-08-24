@@ -186,7 +186,7 @@ input {
 
 .store-info { 
     flex: 1; 
-    font-size: clamp(16px, 1.9vh, 80px);
+    font-size: clamp(16px, 1.7vh, 80px);
     color: #7C7C7C;
     margin-top: 8px;
 }
