@@ -344,5 +344,5 @@ input {
 }
 
 .store-text {
-    font-size: clamp(16px, 1.9vh, 80px);
+    font-size: clamp(16px, 1.6vh, 80px);
 }
