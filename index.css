@@ -313,3 +313,34 @@ input {
     background-color: #7C7C7C;
     margin-left: clamp(5px, 5.5vw, 70px);
 }
+
+.notification-panel {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 250px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.store-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc; /* 매장 아이콘 자리 */
+}
+
+.store-text {
+    font-size: 14px;
+}

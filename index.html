@@ -78,6 +78,8 @@
 
         <div class="store-list" id="storeList">
     </div>
+    <div class="notification-panel" id="notificationPanel">
+    </div>
 
     <script>
     // 전역 변수
@@ -227,6 +229,96 @@
     // 지도 로드
     kakao.maps.load(initMap);
 
+    function getCurrentPosition(callback) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    callback(userLat, userLng);
+                },
+                (error) => {
+                    console.error("위치 정보를 가져올 수 없습니다.", error);
+                    alert("위치 정보 사용이 거부되었습니다. 기본 위치로 설정합니다.");
+                    callback(37.497946, 127.027619); // 기본 위치
+                }
+            );
+        } else {
+            alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+            callback(37.497946, 127.027619); // 기본 위치
+        }
+    }
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+        const R = 6371e3; // 지구 반지름 (m)
+        const φ1 = lat1 * Math.PI / 180;
+        const φ2 = lat2 * Math.PI / 180;
+        const Δφ = (lat2 - lat1) * Math.PI / 180;
+        const Δλ = (lng2 - lng1) * Math.PI / 180;
+
+        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        return R * c; // 단위: m
+    }
+
+    getCurrentPosition((userLat, userLng) => {
+        stores.forEach(store => {
+            store.distance = getDistance(userLat, userLng, store.latitude, store.longitude);
+        });
+
+        // 계산 후 정렬 예시: 가까운 순
+        const sortedByDistance = [...stores].sort((a, b) => a.distance - b.distance);
+        renderStoreList(sortedByDistance);
+
+        // 지도 중심도 현재 위치로 이동
+        map.setCenter(new kakao.maps.LatLng(userLat, userLng));
+    });
+
+    const notificationPanel = document.getElementById("notificationPanel");
+
+// 알림 체크용 인터벌
+setInterval(() => {
+    stores.forEach(store => {
+        if(store.alert && (store.level === "보통" || store.level === "여유")) {
+            // 알림창에 새 알림 추가
+            const div = document.createElement("div");
+            div.className = "notification-item";
+            div.innerHTML = `
+                <div class="store-icon"></div>
+                <div class="store-text">
+                    <strong>${store.name}</strong><br>
+                    현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}
+                </div>
+            `;
+            notificationPanel.prepend(div); // 최신 알림 위쪽
+
+            // 알림 완료 후 다시 알림 off
+            store.alert = false;
+        }
+    });
+}, 5000); // 5초마다 상태 확인
+
+// 알림 버튼 클릭 시
+function toggleAlert(btn, storeName){
+    const store = stores.find(s => s.name === storeName);
+    if(store){
+        if(!store.alert){
+            if(confirm(`${store.name}\n빈자리 알림을 받으시겠습니까?`)){
+                store.alert = true;
+                btn.classList.add("on");
+                btn.classList.remove("off");
+            }
+        } else {
+            store.alert = false;
+            btn.classList.add("off");
+            btn.classList.remove("on");
+        }
+    }
+}
+
     // 매장 리스트 렌더링 함수
     // function renderStoreList(list) {
     //     const container = document.getElementById("storeList");
@@ -367,17 +459,29 @@
         maxY = window.innerHeight * 0.6;
     });
 
+    const sortState = {
+    crowd: "desc",    // 혼잡도 내림차순 초기값
+    distance: "asc"   // 거리 오름차순 초기값
+    };
+
     function toggleSort(type){
-        if(type==="crowd"){
-            sortState.crowd = sortState.crowd==="desc"?"asc":"desc";
-            document.getElementById("crowdArrow").src = sortState.crowd==="desc" ? "./arrow.svg":"./arrow-up.svg";
-            const order = {혼잡:3, 보통:2, 여유:1};
-            const sorted = [...stores].sort((a,b)=> sortState.crowd==="desc"? order[b.level]-order[a.level] : order[a.level]-order[b.level]);
+        if(type === "crowd"){
+            sortState.crowd = sortState.crowd === "desc" ? "asc" : "desc";
+            document.getElementById("crowdArrow").src = sortState.crowd==="desc" ? "./arrow.svg" : "./arrow-up.svg";
+            
+            const order = { 혼잡: 3, 보통: 2, 여유: 1 };
+            const sorted = [...stores].sort((a, b) => 
+                sortState.crowd === "desc" ? order[b.level] - order[a.level] : order[a.level] - order[b.level]
+            );
             renderStoreList(sorted);
-        } else {
-            sortState.distance = sortState.distance==="asc"?"desc":"asc";
-            document.getElementById("distanceArrow").src = sortState.distance==="asc" ? "./arrow.svg":"./arrow-up.svg";
-            const sorted = [...stores].sort((a,b)=> sortState.distance==="asc"? a.distance-b.distance : b.distance-a.distance);
+
+        } else if(type === "distance"){
+            sortState.distance = sortState.distance === "asc" ? "desc" : "asc";
+            document.getElementById("distanceArrow").src = sortState.distance === "asc" ? "./arrow.svg" : "./arrow-up.svg";
+
+            const sorted = [...stores].sort((a, b) => 
+                sortState.distance === "asc" ? a.distance - b.distance : b.distance - a.distance
+            );
             renderStoreList(sorted);
         }
     }
