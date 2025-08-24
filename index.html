@@ -18,7 +18,7 @@
         </div>
         <div class="top-bar">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="가게 검색">
+                <input type="text" id="searchInput" placeholder="매장 검색..." oninput="searchStores()" >
                 <button class="search-btn" onclick="toggleSearch()">
                     <img src="./fi-rs-search.svg" class="search-icn">
                 </button>
@@ -242,12 +242,12 @@
                 (error) => {
                     console.error("위치 정보를 가져올 수 없습니다.", error);
                     alert("위치 정보 사용이 거부되었습니다. 기본 위치로 설정합니다.");
-                    callback(37.497946, 127.027619); // 기본 위치
+                    callback(36.841236, 127.181333); // 기본 위치
                 }
             );
         } else {
             alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-            callback(37.497946, 127.027619); // 기본 위치
+            callback(36.841236, 127.181333); // 기본 위치
         }
     }
 
@@ -466,17 +466,29 @@ function toggleAlert(btn, storeName){
         }
     }
     
-    function toggleSearch(){
-    const input = document.getElementById("searchInput");
+    // 검색창 토글
+    function toggleSearch() {
+        const input = document.getElementById("searchInput");
 
-    if(input.style.display === "none" || input.style.display === ""){
-        input.style.display = "inline-block";
-        input.style.width = "15vw"; // 너비 키우기
-        input.focus();
-    } else {
-        input.style.display = "none";
-        input.style.width = "8vw"; // 원래 너비로 복구
+        if (input.style.display === "none" || input.style.display === "") {
+            input.style.display = "inline-block";
+            input.style.width = "15vw";
+            input.focus();
+        } else {
+            input.style.display = "none";
+            input.style.width = "8vw";
+            input.value = ""; // 닫을 때 초기화
+            renderStores(stores); // 원래 리스트 복원
+        }
     }
+
+    // 검색 기능
+    function searchStores() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = stores.filter(store =>
+            store.name.toLowerCase().includes(query)
+        );
+        renderStores(filtered);
     }
 
     function toggleAlert(btn, storeName){
