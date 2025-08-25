@@ -117,7 +117,7 @@ input {
     height: 0.5px;
     background-color: #7c7c7c;
     border-radius: 10px;
-    margin: 40px 0;
+    margin: 60px 0;
 }
 
 .store-box{
@@ -247,6 +247,7 @@ input {
     width: 88vw; 
     height: 7vh; 
     margin-left: 5.5vw;
+    margin-bottom: 10px;
     border-radius: 30px; 
     background-color: #7c7c7c; 
     display: flex; 
