@@ -95,15 +95,15 @@ input {
 }
 
 .store-text{
-    margin-top: 15px;
+    margin-top: 8px;
 }
 
 .store-text strong{
-    font-size: clamp(16px, 1.3vh, 80px);
+    font-size: clamp(16px, 1.5vh, 80px);
 }
 
 .store-text span{
-    font-size: clamp(16px, 1.1vh, 80px);
+    font-size: clamp(16px, 1.3vh, 80px);
     line-height: 1.5;
     font-weight: 400;
 }
@@ -117,11 +117,11 @@ input {
     height: 0.5px;
     background-color: #cccccc;
     border-radius: 10px;
+    margin: 40px 0;
 }
 
 .store-box{
     width: 100vw;
-    height: 70vh;
     margin: 0;
     padding: 0;
 }
@@ -166,7 +166,7 @@ input {
 
 .isOpen{
     margin-left: 7vw;
-    margin-top: 35px;
+    margin-top: 50px;
     position: relative;
 }
 
@@ -185,7 +185,7 @@ input {
 
 .crowd-level{
     margin-left: 7vw;
-    margin-top: 15px;
+    margin-top: 18px;
     position: relative;
 }
 
@@ -202,8 +202,8 @@ input {
 }
 
 .store-addr{
-    margin-left: 6.5vw;
-    margin-top: 15px;
+    margin-left: 7vw;
+    margin-top: 18px;
 }
 
 .addr-svg{
