@@ -338,8 +338,8 @@ input {
 }
 
 .store-icon {
-    width: clamp(40px, 4vh, 120px);
-    height: clamp(40px, 4vh, 120px);
+    width: clamp(40px, 4.2vh, 120px);
+    height: clamp(40px, 4.2vh, 120px);
     border-radius: 50%;
     background: #ccc; /* 매장 아이콘 자리 */
 }
@@ -349,11 +349,11 @@ input {
 }
 
 .store-text strong{
-    font-size: clamp(16px, 1.3vh, 80px);
+    font-size: clamp(16px, 1.6vh, 80px);
 }
 
 .store-text span{
-    font-size: clamp(16px, 1.1vh, 80px);
+    font-size: clamp(16px, 1.4vh, 80px);
     line-height: 1.5;
     font-weight: 400;
 }
