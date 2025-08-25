@@ -214,7 +214,7 @@ input {
     align-items: center; /* 같은 높이 맞추기 */
     gap: 30px;            /* 텍스트와 값 사이 간격 */
     margin: 0;           /* p 기본 마진 제거 */
-    font-size: clamp(16px, 1.5vh, 80px);     /* 동일한 폰트 크기 */
+    font-size: clamp(16px, 1.7vh, 80px);     /* 동일한 폰트 크기 */
     line-height: 1.8;    /* 줄 간격 통일 */
 }
 
@@ -231,7 +231,7 @@ input {
     align-items: center; /* 같은 높이 맞추기 */
     gap: 30px;            /* 텍스트와 값 사이 간격 */
     margin: 0;           /* p 기본 마진 제거 */
-    font-size: clamp(16px, 1.5vh, 80px);     /* 동일한 폰트 크기 */
+    font-size: clamp(16px, 1.7vh, 80px);     /* 동일한 폰트 크기 */
     line-height: 1.8;    /* 줄 간격 통일 */
 }
 
@@ -241,7 +241,7 @@ input {
     align-items: center; /* 같은 높이 맞추기 */
     gap: 30px;            /* 텍스트와 값 사이 간격 */
     margin: 0;           /* p 기본 마진 제거 */
-    font-size: clamp(16px, 1.5vh, 80px);     /* 동일한 폰트 크기 */
+    font-size: clamp(16px, 1.7vh, 80px);     /* 동일한 폰트 크기 */
     line-height: 1.8;
 }
 
