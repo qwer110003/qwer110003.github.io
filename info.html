@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>자리어때</title>
+        <link href="./style.css" rel="stylesheet">
+    </head>
+    <body style="padding: 0; margin: 0;">
+        <header style="display: flex; background-color: #ffffff; position: fixed; width: 100%; top: 0;">
+            <nav class="nav-style">
+                <div class="nav-logo">
+                    <a href="./index.html">
+                        <img src="./자리어때.svg" class="logo-img">
+                    </a>
+                </div>
+                <div style="display: flex; justify-content: end; align-items: center; width: 100%;">
+                    <div class="top-bar">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="가게 검색">
+                            <button class="search-btn" onclick="toggleSearch()">
+                                <img src="./fi-rs-search.svg" class="search-icn">
+                            </button>
+                        </div>
+                        <button class="notification-btn" onclick="toggleNotificationPanel()">
+                            <img src="./fi-rs-bell.svg" class="notification-icn">
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            <div class="notification-panel" id="notificationPanel">
+        </div>
+        </header>
+        <div>
+            <div class="info-box">
+                <div class="store-list" id="storeListBig"></div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            const stores = [
+                { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", },
+                { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통" },
+                { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡" }
+            ];
+
+            function storeListBig(stores){
+                const container = document.getElementById("storeListBig");
+                if (!container) return;
+                container.innerHTML = "";
+
+                stores.forEach(store => {
+                    // 영업 상태 판단
+                    const isOpenNow = store.storeHours ? store.storeHours.some(hour => hour.isOpen) : false;
+                    const statusText = isOpenNow ? "영업 중" : "영업 종료";
+                    const statusColor = isOpenNow ? "green" : "red";
+
+                    // 혼잡도 상태
+                    let crowdText = "";
+                    let crowdColor = "";
+                    let levelMsg = "";
+
+                    switch(store.level) {
+                        case "여유":
+                            crowdText = store.level;
+                            crowdColor = "green";
+                            levelMsg = "빈 자리 다수";
+                            break;
+                        case "보통":
+                            crowdText = store.level;
+                            crowdColor = "orange";
+                            levelMsg = "빈 자리 약간";
+                            break;
+                        default:
+                            crowdText = store.level || "정보 없음";
+                            crowdColor = "red";
+                            levelMsg = "빈 자리 없음";
+                    }
+
+                    // 영업시간 텍스트 생성
+                    let hoursText = "";
+                    if (store.storeHours && store.storeHours.length > 0) {
+                        hoursText = store.storeHours.map(hour => {
+                            const openClose = hour.isOpen ? `${hour.openTime} ~ ${hour.closeTime}` : "휴무";
+                            return `${hour.dayOfWeek}: ${openClose}`;
+                        }).join('<div class="border-line"></div>');
+                    }
+
+                    // 매장 카드 HTML 생성
+                    const cardHtml = `
+                        <div class="store-box">
+                            <div class=store-header>
+                                <div class="store-img">
+                                    <img src="${store.imageUrl || './default.png'}" style="width: 100;">
+                                </div>
+                                <div class="store-title">
+                                    <p class="title-txt">${store.name}</p>
+                                </div>
+                            </div>
+                            <div class="main-img">
+                                <img src="${store.imageUrl || './default.png'}" style="width: 100%;">
+                            </div>
+                            <div class="store-exp">
+                                <div class="store-info">
+                                    <div class="isOpen">
+                                        <p class="isOpen-txt" style="color: ${statusColor}">${statusText}</p>
+                                        <span class="opentime-txt">${hoursText}</span>
+                                    </div>
+                                    <div class="crowd-level">
+                                        <span class="crowd-txt" style="color: ${crowdColor};">${crowdText}</span>
+                                        <span class="crowd-exp">${levelMsg}</span>
+                                    </div>
+                                    <div class="store-addr">
+                                        <div class="addr-svg">
+                                            <img src="addr.svg">
+                                        </div>
+                                        <p class="addr-txt"></p>
+                                    </div>
+                                    <div class="alert-btn">
+                                        <button class="${store.alert ? "on" : "off"}" onclick="toggleAlert(this, '${store.name}')" id="alert-btn">
+                                            <img src="alert-icn-off.svg" class="alert-icn">
+                                            <span class="btn-txt">${store.alert ? "혼잡도 감소 알림 신청됨" : "혼잡도 감소 알림 신청하기"}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-line"></div>
+
+                    `;
+
+                    container.innerHTML += cardHtml;
+                });
+            }
+
+            storeListBig(stores);
+        
+            const DEFAULT_LAT = 36.841236;
+            const DEFAULT_LNG = 127.181333;
+        
+            function getCurrentPosition(callback) {
+                if (!navigator.geolocation) {
+                    alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+                    if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
+                    return;
+                }
+        
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        if (typeof callback === "function") callback(userLat, userLng);
+                    },
+                    (error) => {
+                        console.error("위치 정보를 가져올 수 없습니다.", error);
+                        alert("위치 정보 사용이 거부되었거나 오류가 발생했습니다. 기본 위치로 설정합니다.");
+                        if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            }
+        
+            function getDistance(lat1, lng1, lat2, lng2) {
+                const R = 6371e3; // 지구 반지름 (m)
+                const φ1 = lat1 * Math.PI / 180;
+                const φ2 = lat2 * Math.PI / 180;
+                const Δφ = (lat2 - lat1) * Math.PI / 180;
+                const Δλ = (lng2 - lng1) * Math.PI / 180;
+        
+                const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                        Math.cos(φ1) * Math.cos(φ2) *
+                        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        
+                return R * c; // 단위: m
+            }
+        
+            getCurrentPosition((userLat, userLng) => {
+                stores.forEach(store => {
+                    store.distance = getDistance(userLat, userLng, store.latitude, store.longitude);
+                });
+        
+                // 계산 후 정렬 예시: 가까운 순
+                const sortedByDistance = [...stores].sort((a, b) => a.distance - b.distance);
+                renderStoreList(sortedByDistance);
+            });
+        
+            const notificationPanel = document.getElementById("notificationPanel");
+        
+            setInterval(() => {
+            let updated = false; // 알림이 추가되거나 갱신되었는지 확인
+            
+            stores.forEach(store => {
+                let existing = document.querySelector(
+                    `#notificationPanel .notification-item[data-store="${store.name}"]`
+                );
+        
+                if (store.alert && (store.level === "보통" || store.level === "여유")) {
+                    if (existing) {
+                        // 이미 알림이 있으면 내용 갱신
+                        existing.querySelector(".store-text").innerHTML = `
+                            <strong>${store.name}</strong><br>
+                            <span>현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}</span>
+                        `;
+                    } else {
+                        // 없으면 새로 추가
+                        const div = document.createElement("div");
+                        div.className = "notification-item";
+                        div.setAttribute("data-store", store.name);
+                        div.innerHTML = `
+                            <div class="store-icon">
+                                <img src="${store.imageUrl}" style="width: 100%">    
+                            </div>
+                            <div class="store-text">
+                                <strong>${store.name}</strong><br>
+                                <span>현재 매장 내 자리 ${store.level === "여유" ? "여유 있습니다." : "약간 있습니다."}<span>
+                            </div>
+                        `;
+                        notificationPanel.prepend(div);
+                    }
+                    updated = true; // 새 알림 or 갱신 발생
+                } else {
+                    // 알림이 꺼져 있거나 혼잡 상태면 패널에서 제거
+                    if (existing) {
+                        existing.remove();
+                        updated = true; // 내용이 변했으므로 패널 열림
+                    }
+                }
+            });
+        
+            // 갱신이나 추가/삭제가 있으면 패널 자동으로 열기
+            if (updated) {
+                notificationPanel.style.display = "block";
+            }
+        }, 5000);
+        
+        // 알림창 토글
+        function toggleNotificationPanel() {
+            const panel = document.getElementById("notificationPanel");
+            if (!panel) return;
+        
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+        
+        // 초기 상태 숨김
+        document.addEventListener("DOMContentLoaded", () => {
+            const panel = document.getElementById("notificationPanel");
+            if(panel) panel.style.display = "none";
+        });
+        
+        
+        // 알림 버튼 클릭 시
+        // 혼잡도 알림 버튼 토글
+        function toggleAlert(btn, storeName) {
+            const store = stores.find(s => s.name === storeName);
+            if (!store) return;
+
+            // 알림 상태 토글
+            store.alert = !store.alert;
+
+            // 버튼 클래스 토글
+            btn.classList.toggle("on", store.alert);
+            btn.classList.toggle("off", !store.alert);
+
+            // span 텍스트만 변경
+            const span = btn.querySelector(".btn-txt");
+            if (span) {
+                span.textContent = store.alert ? "혼잡도 감소 알림 신청됨" : "혼잡도 감소 알림 신청하기";
+            }
+
+            const img = btn.querySelector(".alert-icn");
+            if (img) {
+                img.src = store.alert ? "alert-icn-on.svg" : "alert-icn-off.svg";
+            }
+
+            btn.style.backgroundColor = store.alert ? "#F54927" : "#7c7c7c";
+            btn.style.color = store.alert ? "#FFFFFF" : "#000000";
+        }
+        
+            const sortState = {
+            crowd: "desc",    // 혼잡도 내림차순 초기값
+            distance: "asc"   // 거리 오름차순 초기값
+            };
+        
+            function toggleSort(type){
+                if(type === "crowd"){
+                    sortState.crowd = sortState.crowd === "desc" ? "asc" : "desc";
+                    document.getElementById("crowdArrow").src = sortState.crowd==="desc" ? "./arrow.svg" : "./arrow-up.svg";
+                    
+                    const order = { 혼잡: 3, 보통: 2, 여유: 1 };
+                    const sorted = [...stores].sort((a, b) => 
+                        sortState.crowd === "desc" ? order[b.level] - order[a.level] : order[a.level] - order[b.level]
+                    );
+                    renderStoreList(sorted);
+        
+                } else if(type === "distance"){
+                    sortState.distance = sortState.distance === "asc" ? "desc" : "asc";
+                    document.getElementById("distanceArrow").src = sortState.distance === "asc" ? "./arrow.svg" : "./arrow-up.svg";
+        
+                    const sorted = [...stores].sort((a, b) => 
+                        sortState.distance === "asc" ? a.distance - b.distance : b.distance - a.distance
+                    );
+                    renderStoreList(sorted);
+                }
+            }
+            
+            // 검색창 토글
+            function toggleSearch() {
+                const input = document.getElementById("searchInput");
+        
+                if (input.style.display === "none" || input.style.display === "") {
+                    input.style.display = "inline-block";
+                    input.style.width = "15vw";
+                    input.focus();
+                } else {
+                    input.style.display = "none";
+                    input.style.width = "8vw";
+                    input.value = ""; // 닫을 때 초기화
+                    renderStores(stores); // 원래 리스트 복원
+                }
+            }
+        
+            // 검색 기능
+            function searchStores() {
+                const query = document.getElementById("searchInput").value.toLowerCase();
+                const filtered = stores.filter(store =>
+                    store.name.toLowerCase().includes(query)
+                );
+                renderStores(filtered);
+            }
+
+            const buttons = document.querySelectorAll(".filter-btn");
+        
+            buttons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    // 모든 버튼 active 해제
+                    buttons.forEach(b => b.classList.remove("active"));
+        
+                    // 클릭한 버튼에 active 추가
+                    btn.classList.add("active");
+        
+                    // 화살표 토글 (오름/내림)
+                    const arrow = btn.querySelector(".arrow");
+                    if (arrow.classList.contains("up")) {
+                    arrow.classList.remove("up");
+                    arrow.classList.add("down");
+                    } else {
+                    arrow.classList.remove("down");
+                    arrow.classList.add("up");
+                    }
+                });
+            });
+        
+        
+        
+            </script>
+    </body>
+</html>
