@@ -63,23 +63,6 @@
 
         </div>
 
-        <!-- <div class="storeList">
-            <div class="storeCard">
-                <div class="storeImg">
-                </div>
-                <div class="storeInfo">
-                    <div class="storeName">
-                    </div>
-                    <div class="storeOpen">
-                    </div>
-                    <div class="storeCrowd">
-                    </div>
-                    <div class="storeAddr">
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
         <div class="store-list" id="storeList">
     </div>
 
@@ -201,11 +184,17 @@
             const cardHtml = `
                 <div class="store-card">
                     <div class="store-img-box" style="background-size:cover; background-position:center;">
-                        <img src="${store.imageUrl || './default.png'}" class="store-img">
+                        <a href="./info.html">
+                            <img src="${store.imageUrl || './default.png'}" class="store-img">
+                        </a>
                     </div>
                     <div class="store-info">
                         <div class="store-header">
-                            <span class="store-name">${store.name}</span>
+                            <span class="store-name">
+                                <a href="./info.html" style="text-decoration: none; color: #000000;">
+                                ${store.name}
+                                </a>
+                            </span>
                             <button class="${store.alert ? "on" : "off"}" onclick="toggleAlert(this, '${store.name}')">
                                 <img src="${store.alert ? "./alert-icn-on.svg" : "./alert-icn.svg"}" style="width: clamp(20px, 6.5vw, 80px);">
                             </button>
@@ -231,53 +220,33 @@
     // 지도 로드
     kakao.maps.load(initMap);
 
-    // function getCurrentPosition(callback) {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(
-    //             (position) => {
-    //                 const userLat = position.coords.latitude;
-    //                 const userLng = position.coords.longitude;
-    //                 callback(userLat, userLng);
-    //             },
-    //             (error) => {
-    //                 console.error("위치 정보를 가져올 수 없습니다.", error);
-    //                 alert("위치 정보 사용이 거부되었습니다. 기본 위치로 설정합니다.");
-    //                 callback(36.841236, 127.181333); // 기본 위치
-    //             }
-    //         );
-    //     } else {
-    //         alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-    //         callback(36.841236, 127.181333); // 기본 위치
-    //     }
-    // }
-
     const DEFAULT_LAT = 36.841236;
-const DEFAULT_LNG = 127.181333;
+    const DEFAULT_LNG = 127.181333;
 
-function getCurrentPosition(callback) {
-    if (!navigator.geolocation) {
-        alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-        if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
-        return;
+    function getCurrentPosition(callback) {
+        if (!navigator.geolocation) {
+            alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+            if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                if (typeof callback === "function") callback(userLat, userLng);
+            },
+            (error) => {
+                console.error("위치 정보를 가져올 수 없습니다.", error);
+                alert("위치 정보 사용이 거부되었거나 오류가 발생했습니다. 기본 위치로 설정합니다.");
+                if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
+            },
+            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
     }
 
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const userLat = position.coords.latitude;
-            const userLng = position.coords.longitude;
-            if (typeof callback === "function") callback(userLat, userLng);
-        },
-        (error) => {
-            console.error("위치 정보를 가져올 수 없습니다.", error);
-            alert("위치 정보 사용이 거부되었거나 오류가 발생했습니다. 기본 위치로 설정합니다.");
-            if (typeof callback === "function") callback(DEFAULT_LAT, DEFAULT_LNG);
-        },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-    );
-}
-
     function getDistance(lat1, lng1, lat2, lng2) {
-        const R = 6371e3; // 지구 반지름 (m)
+        const R = 6371e3; 
         const φ1 = lat1 * Math.PI / 180;
         const φ2 = lat2 * Math.PI / 180;
         const Δφ = (lat2 - lat1) * Math.PI / 180;
@@ -288,7 +257,7 @@ function getCurrentPosition(callback) {
                 Math.sin(Δλ/2) * Math.sin(Δλ/2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-        return R * c; // 단위: m
+        return R * c;
     }
 
     getCurrentPosition((userLat, userLng) => {
@@ -296,7 +265,6 @@ function getCurrentPosition(callback) {
             store.distance = getDistance(userLat, userLng, store.latitude, store.longitude);
         });
 
-        // 계산 후 정렬 예시: 가까운 순
         const sortedByDistance = [...stores].sort((a, b) => a.distance - b.distance);
         renderStoreList(sortedByDistance);
 
