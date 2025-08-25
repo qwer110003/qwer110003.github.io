@@ -70,24 +70,58 @@
     // 전역 변수
     let map;
 
-    async function loadStores() {
-        try {
-            const res = await fetch("http://localhost:8081/stores"); // ← 백엔드 API 주소
-            let stores = await res.json();
-
-            // addrUrl을 프론트에서 동적으로 추가
-            stores = stores.map(store => ({
-            ...store,
-            addrUrl: `kakaomap://search?q=${encodeURIComponent(store.name)}`
-            }));
-
-            renderStores(stores); // 기존 그려주는 함수 호출
-        } catch (err) {
-            console.error("가게 데이터를 불러오는 중 오류 발생:", err);
-        }
-    }
-
-    loadStores();
+    const stores = [
+                { 
+                    name: "삼춘네", 
+                    address: "충남 천안시 동남구 문암로 69", 
+                    latitude: 36.841018, 
+                    longitude: 127.180793, 
+                    level: "혼잡", 
+                    hoursText: "04:00~04:00",
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("삼춘네")}` ,
+                    imageUrl: "./samc.jpg"
+                },
+                { 
+                    name: "면식당", 
+                    address: "충남 천안시 동남구 문암로 66", 
+                    latitude: 36.840663, 
+                    longitude: 127.180776, 
+                    level: "보통", 
+                    hoursText: "10:30~21:00",
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("면식당")}` ,
+                    imageUrl: "./austlrekd.jpg"
+                },
+                { 
+                    name: "천원국수", 
+                    address: "충남 천안시 동남구 문암로 66", 
+                    latitude: 36.840715, 
+                    longitude: 127.180814, 
+                    level: "여유", 
+                    hoursText: "09:00~20:00",
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("천원국수")}` ,
+                    imageUrl: "./cjsdnjs.jpg"
+                },
+                { 
+                    name: "야간작업", 
+                    address: "충남 천안시 동남구 문암로 77", 
+                    latitude: 36.841614, 
+                    longitude: 127.181399, 
+                    level: "혼잡",
+                    hoursText: "10:00~22:00", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("야간작업")}`,
+                    imageUrl: "./diwkr.jpg"
+                },
+                { 
+                    name: "고기굽는집", 
+                    address: "충남 천안시 동남구 문암로 79", 
+                    latitude: 36.841828, 
+                    longitude: 127.181631, 
+                    level: "혼잡", 
+                    hoursText: "10:30~21:30",
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("고기굽는집")}` ,
+                    imageUrl: "./gogoob.jpg"
+                }
+            ];
 
     // 지도 초기화
     function initMap() {
@@ -195,9 +229,8 @@
             // 매장 카드 HTML 생성
             const cardHtml = `
                 <div class="store-card">
-                    <div class="store-img-box" style="background-size:cover; background-position:center;">
+                    <div class="store-img-box" style="background-image: url(${store.imageUrl}); background-size: cover; background-position: center;">
                         <a href="./info.html?store=${encodeURIComponent(store.name)}">
-                            <img src="${store.imageUrl || './default.png'}" class="store-img">
                         </a>
                     </div>
                     <div class="store-info">

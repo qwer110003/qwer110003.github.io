@@ -179,6 +179,8 @@ input {
     font-size: clamp(16px, 1.9vh, 80px);
     font-weight: 500;
     left: clamp(16px, 20vw, 600px);
+    color: #7c7c7c;
+    top: 0;
 
 }
 

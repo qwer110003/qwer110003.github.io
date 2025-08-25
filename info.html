@@ -62,43 +62,50 @@
                 { 
                     name: "삼춘네", 
                     address: "충남 천안시 동남구 문암로 69", 
-                    latitude: 36.8152, 
-                    longitude: 127.1543, 
+                    latitude: 36.841018, 
+                    longitude: 127.180793, 
                     level: "혼잡", 
+                    hours: "04:00~04:00",
                     addrUrl: `kakaomap://search?q=${encodeURIComponent("삼춘네")}` ,
                     imageUrl: "./samc.jpg"
                 },
                 { 
                     name: "면식당", 
                     address: "충남 천안시 동남구 문암로 66", 
-                    latitude: 36.8155, 
-                    longitude: 127.1546, 
+                    latitude: 36.840663, 
+                    longitude: 127.180776, 
                     level: "보통", 
+                    hours: "10:30~21:00",
                     addrUrl: `kakaomap://search?q=${encodeURIComponent("면식당")}` ,
                     imageUrl: "./austlrekd.jpg"
                 },
                 { 
                     name: "천원국수", 
                     address: "충남 천안시 동남구 문암로 66", 
-                    latitude: 36.8153, 
-                    longitude: 127.1545, 
+                    latitude: 36.840715, 
+                    longitude: 127.180814, 
                     level: "여유", 
-                    addrUrl: `kakaomap://search?q=${encodeURIComponent("천원국수")}` 
+                    hours: "09:00~20:00",
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("천원국수")}` ,
+                    imageUrl: "./cjsdnjs.jpg"
                 },
                 { 
                     name: "야간작업", 
                     address: "충남 천안시 동남구 문암로 77", 
-                    latitude: 36.8158, 
-                    longitude: 127.1550, 
-                    level: "혼잡", 
-                    addrUrl: `kakaomap://search?q=${encodeURIComponent("야간작업")}` 
+                    latitude: 36.841614, 
+                    longitude: 127.181399, 
+                    level: "혼잡",
+                    hours: "10:00~22:00", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("야간작업")}`,
+                    imageUrl: "./diwkr.jpg"
                 },
                 { 
                     name: "고기굽는집", 
                     address: "충남 천안시 동남구 문암로 79", 
-                    latitude: 36.8160, 
-                    longitude: 127.1553, 
+                    latitude: 36.841828, 
+                    longitude: 127.181631, 
                     level: "혼잡", 
+                    hours: "10:30~21:30",
                     addrUrl: `kakaomap://search?q=${encodeURIComponent("고기굽는집")}` ,
                     imageUrl: "./gogoob.jpg"
                 }
@@ -150,21 +157,19 @@
                     const cardHtml = `
                         <div class="store-box">
                             <div class=store-header>
-                                <div class="store-img">
-                                    <img src="${store.imageUrl || './default.png'}" style="width: 100;">
+                                <div class="store-img" style="background-image: url(${store.imageUrl}); background-size: cover; background-position: center;">
                                 </div>
                                 <div class="store-title">
                                     <p class="title-txt">${store.name}</p>
                                 </div>
                             </div>
-                            <div class="main-img">
-                                <img src="${store.imageUrl || './default.png'}" style="width: 100%;">
+                            <div class="main-img" style="background-image: url(${store.imageUrl}); background-size: cover; background-position: center;">
                             </div>
                             <div class="store-exp">
                                 <div class="store-info">
                                     <div class="isOpen">
                                         <p class="isOpen-txt" style="color: ${statusColor}">${statusText}</p>
-                                        <span class="opentime-txt">${hoursText}</span>
+                                        <span class="opentime-txt">10:30~21:00</span>
                                     </div>
                                     <div class="crowd-level">
                                         <span class="crowd-txt" style="color: ${crowdColor};">${crowdText}</span>
