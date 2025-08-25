@@ -128,8 +128,6 @@ input {
 
 .store-header{
     width: 100vw;
-    height: 8.5vh;
-    margin-top: 8.5vh;
     display: flex;
     justify-content: baseline;
     align-items: center;
