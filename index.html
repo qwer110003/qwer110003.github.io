@@ -70,31 +70,24 @@
     // 전역 변수
     let map;
 
-    // async function loadStores() {
-    //     try {
-    //         const res = await fetch("http://localhost:3000/stores"); // ← 백엔드 API 주소
-    //         let stores = await res.json();
+    async function loadStores() {
+        try {
+            const res = await fetch("http://localhost:8081/stores"); // ← 백엔드 API 주소
+            let stores = await res.json();
 
-    //         // addrUrl을 프론트에서 동적으로 추가
-    //         stores = stores.map(store => ({
-    //         ...store,
-    //         addrUrl: `kakaomap://search?q=${encodeURIComponent(store.name)}`
-    //         }));
+            // addrUrl을 프론트에서 동적으로 추가
+            stores = stores.map(store => ({
+            ...store,
+            addrUrl: `kakaomap://search?q=${encodeURIComponent(store.name)}`
+            }));
 
-    //         renderStores(stores); // 기존 그려주는 함수 호출
-    //     } catch (err) {
-    //         console.error("가게 데이터를 불러오는 중 오류 발생:", err);
-    //     }
-    // }
+            renderStores(stores); // 기존 그려주는 함수 호출
+        } catch (err) {
+            console.error("가게 데이터를 불러오는 중 오류 발생:", err);
+        }
+    }
 
-    // loadStores();
-
-    // 하드코딩 매장 데이터
-    const stores = [
-        { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 A")}`},
-        { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 B")}`},
-        { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 C")}`}
-    ];
+    loadStores();
 
     // 지도 초기화
     function initMap() {

@@ -59,9 +59,49 @@
 
         <script>
             const stores = [
-                { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 A")}`},
-                { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 B")}`},
-                { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 C")}`}
+                { 
+                    name: "삼춘네", 
+                    address: "충남 천안시 동남구 문암로 69", 
+                    latitude: 36.8152, 
+                    longitude: 127.1543, 
+                    level: "혼잡", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("삼춘네")}` ,
+                    imageUrl: "./samc.jpg"
+                },
+                { 
+                    name: "면식당", 
+                    address: "충남 천안시 동남구 문암로 66", 
+                    latitude: 36.8155, 
+                    longitude: 127.1546, 
+                    level: "보통", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("면식당")}` ,
+                    imageUrl: "./austlrekd.jpg"
+                },
+                { 
+                    name: "천원국수", 
+                    address: "충남 천안시 동남구 문암로 66", 
+                    latitude: 36.8153, 
+                    longitude: 127.1545, 
+                    level: "여유", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("천원국수")}` 
+                },
+                { 
+                    name: "야간작업", 
+                    address: "충남 천안시 동남구 문암로 77", 
+                    latitude: 36.8158, 
+                    longitude: 127.1550, 
+                    level: "혼잡", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("야간작업")}` 
+                },
+                { 
+                    name: "고기굽는집", 
+                    address: "충남 천안시 동남구 문암로 79", 
+                    latitude: 36.8160, 
+                    longitude: 127.1553, 
+                    level: "혼잡", 
+                    addrUrl: `kakaomap://search?q=${encodeURIComponent("고기굽는집")}` ,
+                    imageUrl: "./gogoob.jpg"
+                }
             ];
 
             function storeListBig(stores){
