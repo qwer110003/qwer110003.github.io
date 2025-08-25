@@ -70,11 +70,30 @@
     // 전역 변수
     let map;
 
+    // async function loadStores() {
+    //     try {
+    //         const res = await fetch("http://localhost:3000/stores"); // ← 백엔드 API 주소
+    //         let stores = await res.json();
+
+    //         // addrUrl을 프론트에서 동적으로 추가
+    //         stores = stores.map(store => ({
+    //         ...store,
+    //         addrUrl: `kakaomap://search?q=${encodeURIComponent(store.name)}`
+    //         }));
+
+    //         renderStores(stores); // 기존 그려주는 함수 호출
+    //     } catch (err) {
+    //         console.error("가게 데이터를 불러오는 중 오류 발생:", err);
+    //     }
+    // }
+
+    // loadStores();
+
     // 하드코딩 매장 데이터
     const stores = [
-        { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", },
-        { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통" },
-        { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡" }
+        { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 A")}`},
+        { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 B")}`},
+        { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 C")}`}
     ];
 
     // 지도 초기화
@@ -184,14 +203,14 @@
             const cardHtml = `
                 <div class="store-card">
                     <div class="store-img-box" style="background-size:cover; background-position:center;">
-                        <a href="./info.html">
+                        <a href="./info.html?store=${encodeURIComponent(store.name)}">
                             <img src="${store.imageUrl || './default.png'}" class="store-img">
                         </a>
                     </div>
                     <div class="store-info">
                         <div class="store-header">
                             <span class="store-name">
-                                <a href="./info.html" style="text-decoration: none; color: #000000;">
+                                <a href="./info.html?store=${encodeURIComponent(store.name)}" style="text-decoration: none; color: #000000;">
                                 ${store.name}
                                 </a>
                             </span>
@@ -207,7 +226,9 @@
                             <span class="crowd-text" style="color:${crowdColor}; font-weight:400;">${crowdText}</span>
                             <span class="level-text">${levelMsg}</span>
                         </p>
-                        <p class="store-addr">${store.address}</p>
+                        <a href="${store.addrUrl}" style="color: #7c7c7c">
+                            <p class="store-addr">${store.address}</p>
+                        </a>
                     </div>
                 </div>
                 <div class="border-line"></div>

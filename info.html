@@ -59,9 +59,9 @@
 
         <script>
             const stores = [
-                { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", },
-                { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통" },
-                { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡" }
+                { name: "치킨집 A", address: "서울시 강남구", latitude: 37.497946, longitude: 127.027619, level: "여유", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 A")}`},
+                { name: "치킨집 B", address: "서울시 서초구", latitude: 37.491944, longitude: 127.025555, level: "보통", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 B")}`},
+                { name: "치킨집 C", address: "서울시 송파구", latitude: 37.504296, longitude: 127.106598, level: "혼잡", addrUrl: `kakaomap://search?q=${encodeURIComponent("치킨집 C")}`}
             ];
 
             function storeListBig(stores){
